@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="\styles.css">
+</head>
+<body>
+    <%- include('header') %>
+    <h1>Welcome <%= username %>!</h1>
+
+    <h2>User List:</h2>
+    <ul>
+        <% users.forEach(user => { %>
+            <li>
+                <%= user.username %> <% if (user.isAdmin) { %> (Admin) <% } %>
+                <form action="/admin/edit/<%= user.username %>" method="POST">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="<%= user.name %>" required><br>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<%= user.username %>" required><br>
+                    <label for="password">New Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter new password"><br>
+                    <label for="isAdmin">Admin:</label>
+                    <input type="checkbox" id="isAdmin" name="isAdmin" <% if (user.isAdmin) { %> checked <% } %> value="true"><br>
+                    <button type="submit">Save Changes</button>
+                </form>                              
+                <form action="/admin/delete/<%= user.username %>" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+
+    <h2>Add User:</h2>
+    <form action="/admin/add" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <label for="isAdmin">Admin:</label>
+        <input type="checkbox" id="isAdmin" name="isAdmin" <% if (user.isAdmin) { %> checked <% } %> value="true"><br>
+        <button type="submit">Add User</button>
+    </form>
+</body>
+</html>

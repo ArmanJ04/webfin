@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="\styles.css">
+</head>
+<body>
+    <%- include('header') %>
+    <div class="container">
+        <h1>Welcome, <%= username %></h1>
+        <form action="/main" method="post">
+            <input type="text" name="city" placeholder="Enter City" required>
+            <button type="submit">Get Weather</button>
+        </form>
+        <% if (weatherData) { %>
+            <div class="weather-info">
+                <p>City: <%= weatherData.city %></p>
+                <p>Temperature: <%= weatherData.temperature %>°C</p>
+                <p>Feels Like: <%= weatherData.feelsLike %>°C</p>
+                <p>Description: <%= weatherData.description %></p>
+                <p>Icon: <img src="https://openweathermap.org/img/wn/<%= weatherData.icon %>.png" alt="Weather Icon"></p>
+                <p>Humidity: <%= weatherData.humidity %></p>
+                <p>Pressure: <%= weatherData.pressure %></p>
+                <p>Wind Speed: <%= weatherData.windSpeed %></p>
+                <p>Country Code: <%= weatherData.countryCode %></p>
+                <p>Rain Volume: <%= weatherData.rainVolume %></p>
+                <p>Timezone: <%= weatherData.timezone %></p>
+            </div>
+            <h2>City Information</h2>
+            <div class="city-info">
+                <p>Population: <%= weatherData.population %></p>
+                <p>Is Capital: <%= weatherData.isCapital ? 'Yes' : 'No' %></p>
+            </div>
+        <% } else { %>
+            <p>No weather data available.</p>
+        <% } %>
+        <a href="/logout">Logout</a>
+    </div>
+    <footer class="footer">
+        © Arman - SE-2206
+    </footer>
+</body>
+</html>
