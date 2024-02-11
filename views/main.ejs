@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <link rel="stylesheet" href="\styles.css">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <%- include('header') %>
@@ -33,10 +34,24 @@
                 <p>Population: <%= weatherData.population %></p>
                 <p>Is Capital: <%= weatherData.isCapital ? 'Yes' : 'No' %></p>
             </div>
+            <h2>Currency Information</h2>
+            <div class="currency-info">
+                <% if (weatherData.currency) { %>
+                    <p>Currency: <%= weatherData.currency.name %> (<%= weatherData.currency.code %>) - <%= weatherData.currency.symbol %></p>
+                <% } else { %>
+                    <p>No currency information available.</p>
+                <% } %>
+                <form action="/downloadPDF" method="POST">
+                    <input type="hidden" name="weatherData" value='<%- JSON.stringify(weatherData) %>'>
+                    <input type="hidden" name="population" value="<%= weatherData.population %>">
+                    <button type="submit">Download as PDF</button>
+                </form>
+                
+            </div>
+            
         <% } else { %>
             <p>No weather data available.</p>
         <% } %>
-        <a href="/logout">Logout</a>
     </div>
     <footer class="footer">
         © Arman - SE-2206
