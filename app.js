@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const request = require("request");
 const https = require("https");
 const axios = require("axios");
@@ -71,8 +71,16 @@ const requestHistorySchema = new mongoose.Schema({
     username: String,
     requestType: String,
     requestTimestamp: { type: Date, default: Date.now },
-    outcome: String
+    outcome: {
+        type: String,
+        default: "Success"
+    },
+    weatherData: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'WeatherData'
+    }
 });
+
 
 const RequestHistory = mongoose.model("RequestHistory", requestHistorySchema);
 
@@ -85,14 +93,14 @@ app.post("/login", async function (req, res) {
 
     try {
         const adminUser = await User.findOne({ username: username, isAdmin: true });
-        if (adminUser && bcrypt.compareSync(password, adminUser.password)) {
+        if (adminUser && bcryptjs.compareSync(password, adminUser.password)) {
             req.session.user = { username: adminUser.username, isAdmin: true };
             res.redirect("/admin");
             return;
         }
 
         const regularUser = await User.findOne({ username: username, isAdmin: false });
-        if (regularUser && bcrypt.compareSync(password, regularUser.password)) {
+        if (regularUser && bcryptjs.compareSync(password, regularUser.password)) {
             req.session.user = { username: regularUser.username, isAdmin: false };
             res.redirect("/main");
             return;
@@ -139,7 +147,7 @@ app.get("/admin", async function (req, res) {
 app.post("/admin/add", async function (req, res) {
     try {
         const { name, username, password, isAdmin } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
         const existingUser = await User.findOne({ username: username });
         if (existingUser) {
@@ -187,7 +195,7 @@ app.get("/admin/edit/:username", async function (req, res) {
 app.post("/admin/edit/:username", async function (req, res) {
     try {
         const { name, username, password, isAdmin } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
         const editUsername = req.params.username;
         const user = await User.findOne({ username: editUsername });
@@ -227,7 +235,7 @@ app.get("/register", function (req, res) {
 app.post("/register", async function (req, res) {
     try {
         const { name, username, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
         const existingUser = await User.findOne({ username: username });
         if (existingUser) {
@@ -323,10 +331,10 @@ app.post("/main", async function (req, res) {
                 const newRequestHistory = new RequestHistory({
                     username: req.session.user.username,
                     requestType: "Weather API Request",
-                    outcome: "Success"
+                    outcome: "Success",
+                    weatherData: newWeatherData._id 
                 });
                 await newRequestHistory.save();
-
                 res.redirect("/main");
             } catch (error) {
                 console.error("Error parsing city data or fetching currency information:", error.message);
@@ -403,13 +411,14 @@ app.post("/downloadPDF", async function (req, res) {
 
 app.get("/history", async function(req, res) {
     try {
-        const requestHistory = await RequestHistory.find().sort({ requestTimestamp: -1 });
+        const requestHistory = await RequestHistory.find().sort({ requestTimestamp: -1 }).populate('weatherData');
         res.render("history", { requestHistory: requestHistory });
     } catch (error) {
         console.log(error);
         res.send("Error fetching request history.");
     }
 });
+
 
 app.listen(3001, function () {
     console.log("Server is running on port 3001");
