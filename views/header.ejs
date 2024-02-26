@@ -2,17 +2,20 @@
     <nav class="navbar">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a href="/main">Main</a>
+                <a href="/main"><%= lang === 'en' ? 'Main' : 'Главная' %></a>
             </li>
             <li class="nav-item">
-                <a href="/history">History</a>
+                <a href="/admin"><%= lang === 'en' ? 'Admin' : 'Администратор' %></a>
             </li>
             <li class="nav-item">
-                <a href="/admin">Admin</a>
+                <a href="/quiz"><%= lang === 'en' ? 'quiz' : 'Квиз' %></a>
             </li>
             <li class="nav-item">
-                <a href="/logout">Logout</a>
+                <a href="/logout"><%= lang === 'en' ? 'Logout' : 'Выйти' %></a>
             </li>
+            <div class="language-switcher">
+                <a href="?lang=en">English</a> | <a href="?lang=ru">Русский</a>
+            </div>
         </ul>
     </nav>
 </header>

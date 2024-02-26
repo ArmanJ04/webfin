@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title><%= lang === 'en' ? 'Login' : 'Вход' %></title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <%- include('header') %>
     <div class="container">
-        <h1>Welcome to Weather App</h1>
+        <h1><%= lang === 'en' ? 'Welcome to Fruit App' : 'Добро пожаловать в приложение Fruit' %></h1>
         <form action="/login" method="post">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <input type="text" name="username" placeholder="<%= lang === 'en' ? 'Username' : 'Никнейм' %>" required>
+            <input type="password" name="password" placeholder="<%= lang === 'en' ? 'Password' : 'Пароль' %>" required>
+            <button type="submit"><%= lang === 'en' ? 'Login' : 'Вход' %></button>
         </form>
-        <p>Don't have an account? <a href="/register">Register</a></p>
+        <p><%= lang === 'en' ? 'Dont have an account?' : 'У вас нет учетной записи?' %> <a href="/register"><%= lang === 'en' ? 'Register' : 'Регистрация' %></a></p>
     </div>
     <footer class="footer">
         © Arman - SE-2206

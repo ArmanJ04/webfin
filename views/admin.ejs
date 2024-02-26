@@ -1,49 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="/styles.css">
+    <title><%= lang === 'en' ? 'Admin Page' : 'Админ панель:' %></title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px; /* Add margin between cards */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card p {
+            margin-bottom: 10px;
+        }
+
+        .card form {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <%- include('header') %>
-    <h1>Welcome <%= username %>!</h1>
-
-    <h2>User List:</h2>
+    <h2><%= lang === 'en' ? 'Registred users' : 'Зарегистрированные пользователи' %></h2>
     <ul>
         <% users.forEach(user => { %>
-            <li>
-                <%= user.username %> <% if (user.isAdmin) { %> (Admin) <% } %>
-                <form action="/admin/edit/<%= user.username %>" method="POST">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" value="<%= user.name %>" required><br>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="<%= user.username %>" required><br>
-                    <label for="password">New Password:</label>
-                    <input type="password" id="password" name="password" placeholder="Enter new password"><br>
-                    <label for="isAdmin">Admin:</label>
-                    <input type="checkbox" id="isAdmin" name="isAdmin" <% if (user.isAdmin) { %> checked <% } %> value="true"><br>
-                    <button type="submit">Save Changes</button>
-                </form>                              
-                <form action="/admin/delete/<%= user.username %>" method="POST">
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
+            <li><%= user.username %> (<%= user.isAdmin ? 'Admin' : 'Regular User' %>)</li>
         <% }); %>
     </ul>
-
-    <h2>Add User:</h2>
-    <form action="/admin/add" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
-        <label for="isAdmin">Admin:</label>
-        <input type="checkbox" id="isAdmin" name="isAdmin" <% if (user.isAdmin) { %> checked <% } %> value="true"><br>
-        <button type="submit">Add User</button>
+    <h2><%= lang === 'en' ? 'Available Fruits' : 'Доступные Фрукты' %></h2>
+    <div>
+        <% fruits.forEach(fruit => { %>
+            <div class="card">
+                <h3><%= fruit.names.english %></h3>
+                <p><%= lang === 'en' ? 'Nutrition' : 'Пищевая ценность' %></p>
+                <ul>
+                    <li><%= lang === 'en' ? 'Calories' : 'Калорий' %>: <%= fruit.nutrition.nutritions.calories %></li>
+                    <li><%= lang === 'en' ? 'Carbohydrates' : 'Углевод' %>: <%= fruit.nutrition.nutritions.carbohydrates %></li>
+                    <li><%= lang === 'en' ? 'Fat' : 'Жир' %>: <%= fruit.nutrition.nutritions.fat %></li>
+                    <li><%= lang === 'en' ? 'Sugar' : 'Сахар' %>: <%= fruit.nutrition.nutritions.sugar %></li>
+                    <li><%= lang === 'en' ? 'Protein' : 'Белок' %>: <%= fruit.nutrition.nutritions.protein %></li>
+                </ul>                <% if (fruit.recipe && fruit.recipe.length > 0) { %>
+                    <% for (let i = 0; i < Math.min(fruit.recipe.length, 5); i++) { %>
+                        <div>
+                            <h4><%= lang === 'en' ? 'Recipe Title:' : 'Название Рецепта:' %> <%= fruit.recipe[i].title %></h4>
+                            <% if (Array.isArray(fruit.recipe[i].ingredients)) { %>
+                                <p><%= lang === 'en' ? 'Ingredients:' : 'Ингредиенты:' %> <%= fruit.recipe[i].ingredients.join(", ") %></p>
+                            <% } else { %>
+                                <p><%= lang === 'en' ? 'Ingredients:' : 'Ингредиенты:' %> <%= fruit.recipe[i].ingredients %></p>
+                            <% } %>
+                        </div>
+                    <% } %>
+                <% } %>
+                <form action="/admin/edit-fruit/<%= fruit._id %>" method="post">
+                    <input type="text" name="name" placeholder="New Name">
+                    <input type="file" name="pictures" multiple>
+                    <button type="submit"><%= lang === 'en' ? 'Edit Fruit' : 'Редактировать Фрукты' %></button>
+                </form>
+                <form action="/admin/delete-fruit/<%= fruit._id %>" method="post">
+                    <button type="submit"><%= lang === 'en' ? 'Delete Fruit' : 'Удалить Фрукты' %></button>
+                </form>
+            </div>
+        <% }); %>
+    </div>            
+    <form action="/admin/add-fruit" method="post" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Fruit Name">
+        <input type="file" name="pictures" multiple>
+        <button type="submit"><%= lang === 'en' ? 'Add Fruit' : 'Добавить Фрукты' %></button>
     </form>
 </body>
 </html>

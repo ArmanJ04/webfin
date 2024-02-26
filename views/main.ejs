@@ -1,60 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title><%= lang === 'en' ? 'Main Page' : 'Главная страница' %></title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .slider {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            flex: 0 0 48%;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 140px;
+            height: 140px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card img.active {
+            display: block;
+        }
+
+        .dot-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background-color: #717171;
+        }
+
+        .recipe-ingredients {
+            display: none;
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .recipe-title {
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
     <%- include('header') %>
-    <div class="container">
-        <h1>Welcome, <%= username %></h1>
-        <form action="/main" method="post">
-            <input type="text" name="city" placeholder="Enter City" required>
-            <button type="submit">Get Weather</button>
-        </form>
-        <% if (weatherData) { %>
-            <div class="weather-info">
-                <p>City: <%= weatherData.city %></p>
-                <p>Temperature: <%= weatherData.temperature %>°C</p>
-                <p>Feels Like: <%= weatherData.feelsLike %>°C</p>
-                <p>Description: <%= weatherData.description %></p>
-                <p>Icon: <img src="https://openweathermap.org/img/wn/<%= weatherData.icon %>.png" alt="Weather Icon"></p>
-                <p>Humidity: <%= weatherData.humidity %></p>
-                <p>Pressure: <%= weatherData.pressure %></p>
-                <p>Wind Speed: <%= weatherData.windSpeed %></p>
-                <p>Country Code: <%= weatherData.countryCode %></p>
-                <p>Rain Volume: <%= weatherData.rainVolume %></p>
-                <p>Timezone: <%= weatherData.timezone %></p>
-            </div>
-            <h2>City Information</h2>
-            <div class="city-info">
-                <p>Population: <%= weatherData.population %></p>
-                <p>Is Capital: <%= weatherData.isCapital ? 'Yes' : 'No' %></p>
-            </div>
-            <h2>Currency Information</h2>
-            <div class="currency-info">
-                <% if (weatherData.currency) { %>
-                    <p>Currency: <%= weatherData.currency.name %> (<%= weatherData.currency.code %>) - <%= weatherData.currency.symbol %></p>
-                <% } else { %>
-                    <p>No currency information available.</p>
+    <h1><%= lang === 'en' ? 'Available Fruits' : 'Доступные Фрукты' %></h1>
+    <div class="slider">
+        <% fruits.forEach((fruit, index) => { %>
+            <div class="card">
+                <h2 style="text-align: center;"><%= fruit.names.english %></h2>
+                <div class="fruit-slider" id="slider-<%= index %>">
+                    <% fruit.pictures.forEach((picture, idx) => { %>
+                        <img src="<%= picture %>" alt="Fruit Image" class="<%= idx === 0 ? 'active' : '' %>">
+                    <% }); %>
+                </div>
+                <div class="dot-container" id="dots-<%= index %>"></div>
+                <p><strong><%= lang === 'en' ? 'Nutrition' : 'Пищевая ценность' %>:</strong></p>
+                <ul>
+                    <li><%= lang === 'en' ? 'Calories' : 'Калорий' %>: <%= fruit.nutrition.nutritions.calories %></li>
+                    <li><%= lang === 'en' ? 'Carbohydrates' : 'Углевод' %>: <%= fruit.nutrition.nutritions.carbohydrates %></li>
+                    <li><%= lang === 'en' ? 'Fat' : 'Жир' %>: <%= fruit.nutrition.nutritions.fat %></li>
+                    <li><%= lang === 'en' ? 'Sugar' : 'Сахар' %>: <%= fruit.nutrition.nutritions.sugar %></li>
+                    <li><%= lang === 'en' ? 'Protein' : 'Белок' %>: <%= fruit.nutrition.nutritions.protein %></li>
+                </ul>
+                <% if (fruit.recipe && fruit.recipe.length > 0) { %>
+                    <p style="margin-top: 20px;"><strong><%= lang === 'en' ? 'Recipes:' : 'Рецепты:' %></strong></p>
+                    <ul>
+                        <% for (let i = 0; i < Math.min(fruit.recipe.length, 5); i++) { %>
+                            <% const recipe = fruit.recipe[i]; %>
+                            <li class="recipe-title" onclick="toggleIngredients('ingredients-<%= index %>-<%= i %>')"><%= recipe.title %></li>
+                            <ul class="recipe-ingredients" id="ingredients-<%= index %>-<%= i %>">
+                                <% if (Array.isArray(recipe.ingredients)) { %>
+                                    <% recipe.ingredients.forEach((ingredient) => { %>
+                                        <li><%= ingredient %></li>
+                                    <% }); %>
+                                <% } else { %>
+                                    <li><%= recipe.ingredients %></li>
+                                <% } %>
+                            </ul>
+                        <% } %>
+                    </ul>
                 <% } %>
-                <form action="/downloadPDF" method="POST">
-                    <input type="hidden" name="weatherData" value='<%- JSON.stringify(weatherData) %>'>
-                    <input type="hidden" name="population" value="<%= weatherData.population %>">
-                    <button type="submit">Download as PDF</button>
-                </form>
-                
             </div>
-            
-        <% } else { %>
-            <p>No weather data available.</p>
-        <% } %>
+        <% }); %>
     </div>
-    <footer class="footer">
-        © Arman - SE-2206
-    </footer>
+
+    <script>
+        const sliders = document.querySelectorAll('.fruit-slider');
+        sliders.forEach((slider, index) => {
+            let currentIndex = 0;
+            const slides = slider.querySelectorAll('img');
+            const dotsContainer = document.getElementById('dots-' + index);
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                dot.addEventListener('click', () => {
+                    setCurrentSlide(i);
+                });
+                dotsContainer.appendChild(dot);
+            }
+            const dots = dotsContainer.querySelectorAll('.dot');
+
+            setInterval(() => {
+                setCurrentSlide((currentIndex + 1) % slides.length);
+            }, 2000);
+
+            function setCurrentSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                currentIndex = index;
+                slides[currentIndex].classList.add('active');
+                dots[currentIndex].classList.add('active');
+            }
+        });
+
+        function toggleIngredients(id) {
+            const ingredients = document.getElementById(id);
+            ingredients.style.display = ingredients.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>

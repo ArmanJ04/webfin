@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #timer {
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .social-sharing {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .social-sharing button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-sharing button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <%- include('header') %>
+    <div class="container">
+        <h1>Quiz</h1>
+        <div id="timer">Time remaining: <span id="countdown"></span></div>
+        <form id="quizForm" action="/submit-quiz" method="post">
+            <% questions.forEach((question, index) => { %>
+                <div class="question">
+                    <p><strong>Question <%= index + 1 %>:</strong> <%= question.question %></p>
+                    <% question.options.forEach((option, i) => { %>
+                        <input type="radio" id="answer-<%= index %>-<%= i %>" name="answer-<%= index %>" value="<%= option %>">
+                        <label for="answer-<%= index %>-<%= i %>"><%= option %></label><br>
+                    <% }) %>
+                </div>
+            <% }) %>
+            <button id="submitBtn" type="submit">Submit Quiz</button>
+        </form>
+    </div>
+    <div class="social-sharing">
+        <button onclick="shareOnFacebook()">Share on Facebook</button>
+        <button onclick="shareOnTwitter()">Share on Twitter</button>
+        <button onclick="shareOnLinkedIn()">Share on LinkedIn</button>
+    </div>
+    <footer class="footer">
+        © Arman - SE-2206
+    </footer>
+
+    <script>
+        const timerElement = document.getElementById('countdown');
+        let timeLeft = 60; 
+        const timer = setInterval(() => {
+            timeLeft--;
+            if (timeLeft < 0) {
+                clearInterval(timer);
+                document.getElementById('quizForm').submit(); 
+            } else {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.innerText = `${minutes}m ${seconds}s`;
+            }
+        }, 1000);
+
+        function shareOnFacebook() {
+            var urlToShare = "https://www.example.com/quiz-results"; 
+            var facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(urlToShare);
+            window.open(facebookShareUrl, "_blank");
+        }
+    
+        function shareOnTwitter() {
+            var urlToShare = "https://www.example.com/quiz-results"; 
+            var twitterShareUrl = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(urlToShare);
+            window.open(twitterShareUrl, "_blank");
+        }
+    
+        function shareOnLinkedIn() {
+            var urlToShare = "https://www.example.com/quiz-results"; // i haven't yet deployed the project
+            var linkedinShareUrl = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(urlToShare);
+            window.open(linkedinShareUrl, "_blank");
+        }
+    </script>
+</body>
+</html>
