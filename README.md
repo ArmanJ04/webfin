@@ -7,6 +7,7 @@ The Fruit Information App provides users with detailed information about various
 ## Features
 
 - View fruit information in English and Russian languages.
+- You can see the recipe ingridients if you will click the recipe tittle
 - Take quizzes related to fruits with a countdown timer.
 - Share quiz results on Facebook, Twitter, and LinkedIn.
 - Admin panel for managing fruit data:
