@@ -52,7 +52,7 @@ http://localhost:3001
 
 ## Contributors
 
-- Your Name (https://github.com/your-username)
+- Jansatov Arman (https://github.com/ArmanJ04)
 
 ## License
 
