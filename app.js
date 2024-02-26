@@ -243,8 +243,24 @@ app.post("/admin/edit-fruit/:id", upload.array("pictures", 3), async function (r
             return res.send("Fruit not found.");
         }
 
+        const nutritionResponse = await axios.get(`https://www.fruityvice.com/api/fruit/${name}`);
+        if (nutritionResponse.status === 200) {
+            fruit.nutrition.nutritions = nutritionResponse.data;
+        } else {
+            console.log("Error fetching nutrition data:", nutritionResponse.statusText);
+        }
+        const recipeResponse = await axios.get(`https://recipe-by-api-ninjas.p.rapidapi.com/v1/recipe?query=${name}`, {
+            headers: {
+                'X-RapidAPI-Key': '12f3ff4359msh61eca82b12f2e53p1428c9jsn63f44706479e',
+                'X-RapidAPI-Host': 'recipe-by-api-ninjas.p.rapidapi.com'
+            }
+        });
+        if (recipeResponse.status === 200) {
+            fruit.recipe = recipeResponse.data;
+        } else {
+            console.log("Error fetching recipe data:", recipeResponse.statusText);
+        }
         fruit.names.english = name;
-
         if (pictures.length > 0) {
             fruit.pictures = pictures;
         }
@@ -256,6 +272,8 @@ app.post("/admin/edit-fruit/:id", upload.array("pictures", 3), async function (r
         res.send("Error editing fruit.");
     }
 });
+
+
 
 app.post("/admin/delete-fruit/:id", async function (req, res) {
     try {
