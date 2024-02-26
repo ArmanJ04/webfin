@@ -1,44 +1,59 @@
-# Weather Dashboard
+# Fruit Information App
 
 ## Description
-The Weather Dashboard is a web application that allows users to view weather information for different cities. Users can register an account, log in, and access the main dashboard where they can see the current weather data for a specific city. Additionally, the application provides an admin panel where administrators can manage user accounts.
+
+The Fruit Information App provides users with detailed information about various fruits, including their nutrition facts, recipes, and more. Users can view information in both English and Russian languages, take quizzes related to fruits, and share their quiz results on social media platforms. Additionally, the app includes an admin panel for managing fruit data with CRUD (Create, Read, Update, Delete) operations.
 
 ## Features
-- User authentication: Users can register an account and log in securely.
-- Weather data: Users can view the current weather data for any city.
-- Admin panel: Administrators have access to an admin panel where they can manage user accounts.
 
-## Installation
-1. Clone the repository: `git clone <repository-url>`
-2. Install dependencies: `npm install`
-3. Set up environment variables:
-   - Create a `.env` file in the root directory.
-   - Add the following environment variables:
-     - `mongodb+srv://Jansatov:jansatov04@cluster0.84lsw32.mongodb.net/?retryWrites=true&w=majority`: MongoDB connection URI
-     - `1440a81f89afb0a2eda2045fd09454fb`: API key for OpenWeatherMap API
-4. Run the application: `npm start`
+- View fruit information in English and Russian languages.
+- Take quizzes related to fruits with a countdown timer.
+- Share quiz results on Facebook, Twitter, and LinkedIn.
+- Admin panel for managing fruit data:
+  - Create, Read, Update, and Delete fruits.
+  - Manage fruit names, descriptions, pictures, nutrition facts, and recipes.
 
-## Usage
-1. Register an account with a unique username and password.
-2. Log in with your credentials.
-3. On the main dashboard, enter a city name in the search bar and click "Search" to view weather data for that city.
-4. Administrators can access the admin panel by clicking the "Admin" link in the navigation bar. Use the provided admin credentials to log in.
-5. In the admin panel, administrators can manage user accounts, including adding, editing, and deleting users.
+## Admin Login
 
-## Admin Credentials
-- Username: Arman
+- Username: Jansatov
 - Password: 123
 
+## Installation
+
+1. Clone the repository:
+
+git clone https://github.com/your-username/fruit-information-app.git
+
+2. Install dependencies:
+
+cd fruit-information-app
+npm install
+
+3. Set up MongoDB Atlas:
+   - Create a MongoDB Atlas cluster and obtain the connection string.
+   - Replace the connection string in app.js with your MongoDB Atlas connection string.
+
+4. Run the application:
+
+node app.js
+
+5. Access the application in your web browser:
+
+http://localhost:3001
+
 ## Technologies Used
+
 - Node.js
 - Express.js
 - MongoDB
-- Mongoose
 - EJS (Embedded JavaScript)
-- bcrypt (for password hashing)
-- express-session (for session management)
-- request (for making HTTP requests)
-- Bootstrap (for styling)
+- HTML/CSS
+- JavaScript
+
+## Contributors
+
+- Your Name (https://github.com/your-username)
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+
+This project is licensed under the MIT License (LICENSE).
