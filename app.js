@@ -245,7 +245,7 @@ app.post("/admin/edit-fruit/:id", upload.array("pictures", 3), async function (r
 
         const nutritionResponse = await axios.get(`https://www.fruityvice.com/api/fruit/${name}`);
         if (nutritionResponse.status === 200) {
-            fruit.nutrition.nutritions = nutritionResponse.data;
+            fruit.nutrition = nutritionResponse.data;
         } else {
             console.log("Error fetching nutrition data:", nutritionResponse.statusText);
         }
